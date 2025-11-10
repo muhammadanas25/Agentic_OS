@@ -1,0 +1,57 @@
+{
+  "name": "@browseros/wallet",
+  "version": "1.0.0",
+  "description": "Testnet wallet management library for BrowserOS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "wallet",
+    "ethereum",
+    "testnet",
+    "crypto",
+    "web3",
+    "blockchain",
+    "browseros"
+  ],
+  "author": "BrowserOS Team",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.246",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/Agentic_OS.git",
+    "directory": "lib/wallet"
+  },
+  "bugs": {
+    "url": "https://github.com/anthropics/Agentic_OS/issues"
+  }
+}
