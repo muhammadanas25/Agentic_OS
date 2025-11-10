@@ -9,7 +9,6 @@
  */
 
 import { WalletManager, FaucetWorkflow, TestnetNetwork } from './index';
-import { ethers } from 'ethers';
 
 async function main() {
   console.log('=== BrowserOS Wallet Example ===\n');

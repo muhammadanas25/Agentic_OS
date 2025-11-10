@@ -111,7 +111,7 @@ export class KeyManager {
     return await crypto.subtle.deriveKey(
       {
         name: 'PBKDF2',
-        salt,
+        salt: salt as BufferSource,
         iterations,
         hash: KEY_DERIVATION.DIGEST,
       },
@@ -126,10 +126,11 @@ export class KeyManager {
   }
 
   /**
-   * Convert ArrayBuffer to hex string
+   * Convert ArrayBuffer or Uint8Array to hex string
    */
-  private bufferToHex(buffer: ArrayBuffer): string {
-    return Array.from(new Uint8Array(buffer))
+  private bufferToHex(buffer: ArrayBuffer | Uint8Array): string {
+    const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+    return Array.from(bytes)
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
   }

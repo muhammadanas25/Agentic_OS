@@ -4,10 +4,9 @@
  * Handles transaction building, signing, and broadcasting
  */
 
-import { ethers, BigNumber } from 'ethers';
+import { ethers } from 'ethers';
 import { TransactionParams } from './types';
 import { TestnetProvider } from './TestnetProvider';
-import { TRANSACTION } from './config';
 
 /**
  * Transaction manager for building and sending transactions

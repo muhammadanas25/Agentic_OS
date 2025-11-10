@@ -162,7 +162,8 @@ export class WalletStorage {
       this.cache = this.getDefaultData();
     }
 
-    return this.cache;
+    // At this point cache is always set
+    return this.cache!;
   }
 
   private async setData(data: WalletStorageSchema): Promise<void> {

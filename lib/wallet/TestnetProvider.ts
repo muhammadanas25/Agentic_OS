@@ -15,8 +15,8 @@ import {
   Transaction,
   TransactionReceipt,
   TransactionParams,
-  WalletErrorCode,
   NetworkConfig,
+  TransactionStatus,
 } from './types';
 import {
   getNetworkConfig,
@@ -265,9 +265,9 @@ export class TestnetProvider implements ITestnetProvider {
         chainId: tx.chainId,
         status: receipt
           ? receipt.status === 1
-            ? 'confirmed' as const
-            : 'failed' as const
-          : 'pending' as const,
+            ? TransactionStatus.CONFIRMED
+            : TransactionStatus.FAILED
+          : TransactionStatus.PENDING,
         blockNumber: tx.blockNumber || undefined,
         blockHash: tx.blockHash || undefined,
         timestamp: Date.now(),
@@ -317,7 +317,7 @@ export class TestnetProvider implements ITestnetProvider {
       gasUsed: receipt.gasUsed.toString(),
       cumulativeGasUsed: receipt.cumulativeGasUsed.toString(),
       effectiveGasPrice: receipt.effectiveGasPrice?.toString() || '0',
-      status: receipt.status || 0,
+      status: (receipt.status ?? 0) as 0 | 1,
       logs: receipt.logs.map((log) => ({
         address: log.address,
         topics: log.topics,

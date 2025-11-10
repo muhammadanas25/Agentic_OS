@@ -126,21 +126,21 @@ export class FaucetWorkflow {
    */
   private async executeFaucetRequest(
     address: string,
-    network: TestnetNetwork,
+    _network: TestnetNetwork,
     faucet: FaucetConfig,
-    options: FaucetRequestOptions
+    _options: FaucetRequestOptions
   ): Promise<FaucetResult> {
     console.log(`[FaucetWorkflow] Requesting from ${faucet.name}...`);
 
     // For web-based faucets, we need to open the URL in a new tab
     // and guide the user through the process
     if (faucet.type === 'web') {
-      return await this.handleWebFaucet(address, faucet, options);
+      return await this.handleWebFaucet(address, faucet);
     }
 
     // For API-based faucets (if we had API keys configured)
     if (faucet.type === 'api') {
-      return await this.handleApiFaucet(address, faucet, options);
+      return await this.handleApiFaucet(address, faucet);
     }
 
     // Other faucet types would be handled here
@@ -156,8 +156,7 @@ export class FaucetWorkflow {
    */
   private async handleWebFaucet(
     address: string,
-    faucet: FaucetConfig,
-    options: FaucetRequestOptions
+    faucet: FaucetConfig
   ): Promise<FaucetResult> {
     // Open faucet URL in new tab
     const faucetUrl = `${faucet.url}?address=${address}`;
@@ -182,9 +181,8 @@ export class FaucetWorkflow {
    * Handle API-based faucet
    */
   private async handleApiFaucet(
-    address: string,
-    faucet: FaucetConfig,
-    options: FaucetRequestOptions
+    _address: string,
+    _faucet: FaucetConfig
   ): Promise<FaucetResult> {
     // This would make actual API calls to faucet services
     // For now, return a placeholder
@@ -322,8 +320,8 @@ export class FaucetWorkflow {
    * Update rate limit timestamp
    */
   private async updateRateLimit(
-    address: string,
-    network: TestnetNetwork
+    _address: string,
+    _network: TestnetNetwork
   ): Promise<void> {
     // Rate limit is implicitly tracked via faucet history
     // The checkRateLimit method uses the history to determine if requests are allowed

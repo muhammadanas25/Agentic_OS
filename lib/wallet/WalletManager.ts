@@ -32,7 +32,6 @@ import {
   MNEMONIC,
   PASSWORD,
   ERROR_MESSAGES,
-  SUCCESS_MESSAGES,
 } from './config';
 import { isValidAddress, isValidPrivateKey, isSupportedNetwork } from './types';
 

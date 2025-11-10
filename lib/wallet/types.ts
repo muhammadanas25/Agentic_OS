@@ -618,13 +618,3 @@ export function isValidPrivateKey(key: unknown): key is string {
 export function isSupportedNetwork(network: unknown): network is TestnetNetwork {
   return typeof network === 'string' && Object.values(TestnetNetwork).includes(network as TestnetNetwork);
 }
-
-// ============================================================================
-// Exports
-// ============================================================================
-
-export type {
-  IFaucetPlugin,
-  ITestnetProvider,
-  IEventEmitter,
-};
