@@ -1,7 +1,7 @@
 {
   "name": "@browseros/wallet",
-  "version": "1.0.0",
-  "description": "Testnet wallet management library for BrowserOS",
+  "version": "2.0.0",
+  "description": "Testnet wallet management and x402 agent payment library for BrowserOS",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -18,7 +18,10 @@
     "format": "prettier --write \"**/*.{ts,json,md}\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "example:basic": "npm run build && node dist/example.js",
+    "example:x402:provider": "npm run build && node dist/examples/x402/provider.js",
+    "example:x402:consumer": "npm run build && node dist/examples/x402/consumer.js"
   },
   "keywords": [
     "wallet",
@@ -27,7 +30,11 @@
     "crypto",
     "web3",
     "blockchain",
-    "browseros"
+    "browseros",
+    "x402",
+    "agent-payments",
+    "ai-agents",
+    "micropayments"
   ],
   "author": "BrowserOS Team",
   "license": "MIT",
