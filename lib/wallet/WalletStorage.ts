@@ -2,7 +2,7 @@
  * Wallet Storage
  *
  * Handles persistent storage of encrypted wallet data and transaction history
- * using browser extension storage API.
+ * using browser extension storage API, localStorage, or file-based storage (Node.js).
  */
 
 import {
@@ -16,6 +16,21 @@ import {
 } from './types';
 import { STORAGE_VERSION, STORAGE_KEYS } from './config';
 
+// Node.js filesystem support (optional - only loaded in Node.js environments)
+let fs: any = null;
+let path: any = null;
+let isNode = false;
+
+try {
+  if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+    fs = require('fs');
+    path = require('path');
+    isNode = true;
+  }
+} catch (e) {
+  // Not in Node.js environment
+}
+
 interface StorageOptions {
   storageKey?: string;
 }
@@ -26,9 +41,23 @@ interface StorageOptions {
 export class WalletStorage {
   private storageKey: string;
   private cache: WalletStorageSchema | null = null;
+  private storagePath: string | null = null;
 
   constructor(options: StorageOptions = {}) {
     this.storageKey = options.storageKey || STORAGE_KEYS.WALLETS;
+
+    // Initialize storage path for Node.js environments
+    if (isNode && fs && path) {
+      const homeDir = process.env.HOME || process.env.USERPROFILE || '.';
+      const walletDir = path.join(homeDir, '.browseros-wallet');
+
+      // Create directory if it doesn't exist
+      if (!fs.existsSync(walletDir)) {
+        fs.mkdirSync(walletDir, { recursive: true });
+      }
+
+      this.storagePath = path.join(walletDir, `${this.storageKey}.json`);
+    }
   }
 
   // ========================================================================
@@ -152,10 +181,21 @@ export class WalletStorage {
         const result = await chrome.storage.local.get(this.storageKey);
         const data = result[this.storageKey];
         this.cache = data || this.getDefaultData();
-      } else {
+      } else if (typeof localStorage !== 'undefined') {
         // Fallback to localStorage
         const stored = localStorage.getItem(this.storageKey);
         this.cache = stored ? JSON.parse(stored) : this.getDefaultData();
+      } else if (isNode && fs && this.storagePath) {
+        // Fallback to file-based storage in Node.js
+        if (fs.existsSync(this.storagePath)) {
+          const fileContent = fs.readFileSync(this.storagePath, 'utf8');
+          this.cache = JSON.parse(fileContent);
+        } else {
+          this.cache = this.getDefaultData();
+        }
+      } else {
+        // No storage available, use in-memory only
+        this.cache = this.getDefaultData();
       }
     } catch (error) {
       console.error('[WalletStorage] Failed to get data:', error);
@@ -172,9 +212,13 @@ export class WalletStorage {
     try {
       if (typeof chrome !== 'undefined' && chrome.storage) {
         await chrome.storage.local.set({ [this.storageKey]: data });
-      } else {
+      } else if (typeof localStorage !== 'undefined') {
         localStorage.setItem(this.storageKey, JSON.stringify(data));
+      } else if (isNode && fs && this.storagePath) {
+        // Use file-based storage in Node.js
+        fs.writeFileSync(this.storagePath, JSON.stringify(data, null, 2), 'utf8');
       }
+      // If no storage available, just keep in memory (cache)
     } catch (error) {
       console.error('[WalletStorage] Failed to set data:', error);
       throw error;

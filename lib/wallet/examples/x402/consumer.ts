@@ -9,6 +9,8 @@ import { WalletManager, X402Manager, FaucetWorkflow, TestnetNetwork } from '../.
 
 async function main() {
   console.log('=== x402 Consumer Agent Example ===\n');
+  console.log('NOTE: This example requires network connectivity to Base Sepolia testnet.');
+  console.log('      For production use, ensure you have valid RPC endpoints configured.\n');
 
   // Step 1: Create consumer wallet
   console.log('1. Setting up consumer agent wallet...');
@@ -18,16 +20,31 @@ async function main() {
   console.log('   ✓ Consumer wallet created');
   console.log(`   Address: ${wallet.address}\n`);
 
-  // Step 2: Get testnet USDC
-  console.log('2. Getting testnet USDC...');
+  // Step 2: Connect to network
+  console.log('2. Connecting to Base Sepolia testnet...');
+  try {
+    await walletManager.getProvider().connect(TestnetNetwork.BASE_SEPOLIA);
+    console.log('   ✓ Connected to Base Sepolia\n');
+  } catch (error: any) {
+    console.log('   ✗ Network connection failed');
+    console.log('   This is expected if RPC endpoints are not configured or accessible.');
+    console.log('   Continuing with offline demonstration...\n');
+  }
+
+  // Step 3: Get testnet USDC
+  console.log('3. Getting testnet USDC...');
   console.log('   (In production, fund with real USDC)');
 
   const faucet = new FaucetWorkflow(walletManager);
 
   // First get testnet ETH for gas
   console.log('   Requesting testnet ETH for gas...');
-  await faucet.requestTokens(wallet.address, TestnetNetwork.BASE_SEPOLIA);
-  console.log('   ✓ Testnet ETH requested\n');
+  try {
+    await faucet.requestTokens(wallet.address, TestnetNetwork.BASE_SEPOLIA);
+    console.log('   ✓ Testnet ETH requested\n');
+  } catch (error: any) {
+    console.log('   ✗ Faucet request failed (network required)');
+  }
 
   // Note: For USDC, you would typically:
   // 1. Buy USDC on mainnet
@@ -38,12 +55,12 @@ async function main() {
 
   console.log('   For this example, assume wallet has USDC\n');
 
-  // Step 3: Initialize x402 Manager
-  console.log('3. Initializing x402 payment client...');
+  // Step 4: Initialize x402 Manager
+  console.log('4. Initializing x402 payment client...');
   const x402 = new X402Manager(walletManager);
   console.log('   ✓ x402 client ready\n');
 
-  // Step 4: Listen for payment events
+  // Step 5: Listen for payment events
   x402.on('paymentSent', (payment) => {
     console.log(`💸 Payment sent:`);
     console.log(`   To: ${payment.to}`);
@@ -52,8 +69,8 @@ async function main() {
     console.log(`   Invoice: ${payment.invoiceId}\n`);
   });
 
-  // Step 5: Make x402-enabled service requests
-  console.log('4. Making service requests...\n');
+  // Step 6: Make x402-enabled service requests
+  console.log('5. Making service requests...\n');
 
   // Simulate discovering a service
   const serviceUrl = 'https://image-analysis-agent.com/api/analyze';
@@ -114,23 +131,28 @@ async function main() {
     console.log(`   ✗ Error: ${error.message}\n`);
   }
 
-  // Step 6: Show spending report
-  console.log('5. Checking spending...');
-  const spending = await x402.getSpendingReport(wallet.address);
-  console.log(`   Total spent: ${spending.totalSpent} USDC`);
-  console.log(`   Transactions: ${spending.paymentCount}`);
+  // Step 7: Show spending report
+  console.log('6. Checking spending...');
+  try {
+    const spending = await x402.getSpendingReport(wallet.address);
+    console.log(`   Total spent: ${spending.totalSpent} USDC`);
+    console.log(`   Transactions: ${spending.paymentCount}`);
 
-  if (spending.payments.length > 0) {
-    console.log('\n   Payment history:');
-    spending.payments.forEach((p, i) => {
-      console.log(`   ${i + 1}. ${p.amount} USDC to ${p.to.substring(0, 10)}...`);
-      console.log(`      TX: ${p.txHash}`);
-    });
+    if (spending.payments.length > 0) {
+      console.log('\n   Payment history:');
+      spending.payments.forEach((p, i) => {
+        console.log(`   ${i + 1}. ${p.amount} USDC to ${p.to.substring(0, 10)}...`);
+        console.log(`      TX: ${p.txHash}`);
+      });
+    }
+    console.log();
+  } catch (error: any) {
+    console.log('   (Spending report requires network connectivity)');
+    console.log();
   }
-  console.log();
 
-  // Step 7: Show how to use in production
-  console.log('6. Production usage example:\n');
+  // Step 8: Show how to use in production
+  console.log('7. Production usage example:\n');
   console.log('   ```typescript');
   console.log('   // Automatic payment handling');
   console.log('   const result = await x402.request(serviceUrl, {');

@@ -9,6 +9,8 @@ import { WalletManager, X402Manager, TestnetNetwork } from '../../index';
 
 async function main() {
   console.log('=== x402 Provider Agent Example ===\n');
+  console.log('NOTE: This example requires network connectivity to Base Sepolia testnet.');
+  console.log('      For production use, ensure you have valid RPC endpoints configured.\n');
 
   // Step 1: Create provider wallet
   console.log('1. Setting up provider agent wallet...');
@@ -19,12 +21,23 @@ async function main() {
   console.log(`   Address: ${wallet.address}`);
   console.log(`   This is where you'll receive payments\n`);
 
-  // Step 2: Initialize x402 Manager
-  console.log('2. Initializing x402 payment protocol...');
+  // Step 2: Connect to network
+  console.log('2. Connecting to Base Sepolia testnet...');
+  try {
+    await walletManager.getProvider().connect(TestnetNetwork.BASE_SEPOLIA);
+    console.log('   ✓ Connected to Base Sepolia\n');
+  } catch (error: any) {
+    console.log('   ✗ Network connection failed');
+    console.log('   This is expected if RPC endpoints are not configured or accessible.');
+    console.log('   Continuing with offline demonstration...\n');
+  }
+
+  // Step 3: Initialize x402 Manager
+  console.log('3. Initializing x402 payment protocol...');
   const x402 = new X402Manager(walletManager);
 
-  // Step 3: Register service
-  console.log('3. Registering service...');
+  // Step 4: Register service
+  console.log('4. Registering service...');
   x402.registerService({
     endpoint: '/api/analyze',
     pricing: {
@@ -43,16 +56,21 @@ async function main() {
   console.log('     - Text analysis:  $0.0005');
   console.log('     - Video analysis: $0.01\n');
 
-  // Step 4: Set up payment monitoring
-  console.log('4. Starting payment monitoring...');
-  const stopMonitoring = await x402.monitorPayments(
-    wallet.address,
-    TestnetNetwork.BASE_SEPOLIA
-  );
+  // Step 5: Set up payment monitoring
+  console.log('5. Starting payment monitoring...');
+  let stopMonitoring: (() => void) | null = null;
+  try {
+    stopMonitoring = await x402.monitorPayments(
+      wallet.address,
+      TestnetNetwork.BASE_SEPOLIA
+    );
+    console.log('   ✓ Monitoring for incoming payments\n');
+  } catch (error: any) {
+    console.log('   ✗ Could not start payment monitoring (network required)');
+    console.log('   In production, ensure network is connected first.\n');
+  }
 
-  console.log('   ✓ Monitoring for incoming payments\n');
-
-  // Step 5: Listen for events
+  // Step 6: Listen for events
   x402.on('paymentRequested', (request) => {
     console.log(`💰 Payment requested:`);
     console.log(`   Amount: ${request.amount} USDC`);
@@ -72,8 +90,8 @@ async function main() {
     console.log(`   Sending response to client\n`);
   });
 
-  // Step 6: Simulate service requests
-  console.log('5. Agent is now ready to accept payments!');
+  // Step 7: Simulate service requests
+  console.log('6. Agent is now ready to accept payments!');
   console.log('   Waiting for incoming requests...\n');
 
   // In a real implementation, you would:
@@ -95,29 +113,49 @@ async function main() {
   });
   console.log();
 
-  // Step 7: Show earnings
-  console.log('6. Checking earnings...');
-  const earnings = await x402.getEarningsReport(wallet.address);
-  console.log(`   Total earned: ${earnings.totalEarned} USDC`);
-  console.log(`   Payment count: ${earnings.paymentCount}`);
-  console.log();
+  // Step 8: Show earnings
+  console.log('7. Checking earnings...');
+  try {
+    const earnings = await x402.getEarningsReport(wallet.address);
+    console.log(`   Total earned: ${earnings.totalEarned} USDC`);
+    console.log(`   Payment count: ${earnings.paymentCount}`);
+    console.log();
+  } catch (error: any) {
+    console.log('   (Earnings report requires network connectivity)');
+    console.log();
+  }
 
-  console.log('=== Provider Agent Running ===');
-  console.log('Press Ctrl+C to stop\n');
+  console.log('=== Provider Agent Example Complete ===\n');
+  console.log('This example demonstrated:');
+  console.log('✅ Creating a provider wallet');
+  console.log('✅ Registering an x402 service with pricing');
+  console.log('✅ Generating payment request headers');
+  console.log('✅ Setting up payment monitoring (requires network)');
+  console.log('✅ Tracking earnings (requires network)\n');
 
-  // Keep running
-  process.on('SIGINT', () => {
-    console.log('\n\n=== Shutting down ===');
-    stopMonitoring();
-    console.log('Payment monitoring stopped');
-    console.log(`Final earnings: ${earnings.totalEarned} USDC`);
-    process.exit(0);
-  });
+  console.log('For production use:');
+  console.log('1. Configure valid RPC endpoints in config/');
+  console.log('2. Fund wallet with testnet ETH for gas');
+  console.log('3. Start HTTP server with x402 middleware');
+  console.log('4. Monitor payments in real-time\n');
 
-  // Keep process alive
-  setInterval(() => {
-    // Could periodically log stats here
-  }, 60000);
+  if (stopMonitoring) {
+    // Keep running
+    console.log('Press Ctrl+C to stop monitoring\n');
+    process.on('SIGINT', () => {
+      console.log('\n\n=== Shutting down ===');
+      if (stopMonitoring) {
+        stopMonitoring();
+        console.log('Payment monitoring stopped');
+      }
+      process.exit(0);
+    });
+
+    // Keep process alive
+    setInterval(() => {
+      // Could periodically log stats here
+    }, 60000);
+  }
 }
 
 // Run if called directly
