@@ -241,7 +241,7 @@ npm run build
 
 ```bash
 # In your project directory
-npm install /path/to/Agentic_OS/lib/wallet
+npm install docs/wallet/Agentic_OS/lib/wallet
 
 # Or publish to npm registry
 cd lib/wallet
@@ -276,7 +276,6 @@ sudo apt install -y \
 
 ```bash
 cd packages/browseros
-
 # Configure build
 python3 build/build.py \
   --config build/config/debug.yaml \

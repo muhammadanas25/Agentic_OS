@@ -14,7 +14,7 @@ export const NETWORK_CONFIGS: Record<TestnetNetwork, NetworkConfig> = {
   [TestnetNetwork.SEPOLIA]: {
     name: 'Sepolia',
     chainId: 11155111,
-    rpcUrl: 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY',
+    rpcUrl: 'https://eth-sepolia.g.alchemy.com/v2/OOIkb1NjkpQXL4wBnGqlT',
     symbol: 'ETH',
     decimals: 18,
     explorer: 'https://sepolia.etherscan.io',
@@ -83,21 +83,19 @@ export const NETWORK_CONFIGS: Record<TestnetNetwork, NetworkConfig> = {
  */
 export const ALTERNATIVE_RPC_URLS: Record<TestnetNetwork, string[]> = {
   [TestnetNetwork.SEPOLIA]: [
-    'https://sepolia.infura.io/v3/YOUR_INFURA_KEY',
-    'https://eth-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_KEY',
+    'https://eth-sepolia.g.alchemy.com/v2/OOIkb1NjkpQXL4wBnGqlT',
     'https://rpc.sepolia.org',
     'https://eth-sepolia-public.unifra.io',
   ],
 
   [TestnetNetwork.GOERLI]: [
-    'https://goerli.infura.io/v3/YOUR_INFURA_KEY',
-    'https://eth-goerli.g.alchemy.com/v2/YOUR_ALCHEMY_KEY',
+    'https://eth-goerli.g.alchemy.com/v2/OOIkb1NjkpQXL4wBnGqlT',
     'https://rpc.ankr.com/eth_goerli',
   ],
 
   [TestnetNetwork.MUMBAI]: [
     'https://rpc-mumbai.maticvigil.com',
-    'https://polygon-mumbai.g.alchemy.com/v2/YOUR_ALCHEMY_KEY',
+    'https://polygon-mumbai.g.alchemy.com/v2/OOIkb1NjkpQXL4wBnGqlT',
     'https://rpc.ankr.com/polygon_mumbai',
     'https://matic-mumbai.chainstacklabs.com',
   ],
