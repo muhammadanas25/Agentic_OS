@@ -1,0 +1,4 @@
+          <div class="wallet-header">
+            <h2>🔐 Titan Wallet</h2>
+            <button id="wallet-close-btn" class="icon-btn">✕</button>
+          </div>

@@ -1,0 +1,44 @@
+<div id="wallet-panel" class="wallet-panel" style="display:none;">
+  <div class="wallet-header">
+    <h2>🔐 Wallet</h2>
+    <button id="wallet-close-btn" class="icon-btn">✕</button>
+  </div>
+
+  <div id="wallet-content">
+    <!-- Wallet setup -->
+    <div id="wallet-setup" class="wallet-section">
+      <h3>Create Your Wallet</h3>
+      <p>Enable x402 payments for AI agents</p>
+      <input type="password" id="wallet-password" placeholder="Enter password" class="wallet-input" />
+      <button id="create-wallet-btn" class="primary-btn">Create Wallet</button>
+    </div>
+
+    <!-- Wallet dashboard -->
+    <div id="wallet-dashboard" class="wallet-section" style="display:none;">
+      <div class="wallet-balance">
+        <div class="balance-label">Balance</div>
+        <div id="eth-balance" class="balance-amount">0 ETH</div>
+        <div id="usdc-balance" class="balance-amount">0 USDC</div>
+      </div>
+
+      <div class="wallet-address">
+        <label>Your Address:</label>
+        <div id="wallet-address-text" class="address-text"></div>
+        <button id="copy-address-btn" class="icon-btn">📋</button>
+      </div>
+
+      <div class="wallet-actions">
+        <button id="receive-btn" class="action-btn">Receive</button>
+        <button id="faucet-btn" class="action-btn">Faucet</button>
+        <button id="refresh-btn" class="action-btn">Refresh</button>
+      </div>
+
+      <div class="payment-history">
+        <h4>Recent Activity</h4>
+        <div id="payment-list" class="payment-list">
+          <p class="empty-state">No transactions yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
