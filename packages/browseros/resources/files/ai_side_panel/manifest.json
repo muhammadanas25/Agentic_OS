@@ -15,7 +15,10 @@
     "bookmarks",
     "history",
     "settingsPrivate",
-    "browserOS"
+    "browserOS",
+    "notifications",
+    "webRequest",
+    "webRequestBlocking"
   ],
   "host_permissions": [
     "<all_urls>"

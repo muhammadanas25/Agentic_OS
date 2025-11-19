@@ -1,4 +1,18 @@
-<!doctype html><html lang="en" class="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nxtscape Side Panel</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"><style>/* Reset default margins and add base font for side panel */
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BrowserOS Side Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Wallet Panel Styles -->
+  <link rel="stylesheet" href="wallet-panel.css">
+
+  <style>
+    /* Reset default margins and add base font for side panel */
     html, body {
       width: 100%;
       height: 100%;
@@ -19,4 +33,53 @@
     /* Side panel specific optimizations */
     * {
       box-sizing: border-box;
-    }</style><script defer="defer" src="sidepanel.js"></script></head><body><div id="root"></div><script src="sidepanel.js"></script></body></html>
+    }
+
+    /* Wallet toggle button in main panel */
+    #wallet-toggle {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    #wallet-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    #wallet-toggle.active {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+  </style>
+
+  <!-- Load wallet library first -->
+  <script src="wallet.js"></script>
+</head>
+<body>
+  <!-- Main side panel content -->
+  <div id="root"></div>
+
+  <!-- Wallet toggle button -->
+  <button id="wallet-toggle" title="Toggle Wallet">💰</button>
+
+  <!-- Wallet Panel Container (initially hidden) -->
+  <div id="wallet-panel-container"></div>
+
+  <!-- Load side panel scripts -->
+  <script defer="defer" src="sidepanel.js"></script>
+
+  <!-- Load wallet UI -->
+  <script src="wallet-ui.js"></script>
+</body>
+</html>
